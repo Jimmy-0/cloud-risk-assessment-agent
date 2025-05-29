@@ -1,3 +1,6 @@
+from .prompt_manager import PromptManager
+prompt_manager = PromptManager()
+
 import os
 import tiktoken
 from langchain.chat_models import init_chat_model
@@ -28,13 +31,11 @@ def token_count(text, model_name="gpt-4o"):
     return len(tokens)
 
 def read_prompt(state: str) -> str:
+    """Return the content of a prompt from the prompt cache."""
     try:
-        file_path = f"./src/prompts/{state}_prompt.txt"
-        with open(file_path, 'r', encoding='utf-8') as file:
-            content = file.read()
-        return content
+        return prompt_manager.load(state)
     except Exception as e:
-        print(f"Error reading file {file_path}: {e}")
+        print(f"Error reading prompt {state}: {e}")
         return ""
 
 def read_file_prompt(file_path: str) -> str:
